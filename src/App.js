@@ -1,48 +1,52 @@
-import './App.css';
-import {useEffect, useState} from "react";
-import axios from "axios"
 
+import axios from 'axios';
 
-function App() {
-    const [state, setAllData] = useState([])
-    const [filteredData, setFilteredData] = useState(state);
+import React, { useState, useEffect } from 'react';
+
+export default  function  App(){
+    const [allData,setAllData] = useState([]);
+    const [filteredData,setFilteredData] = useState(allData);
     useEffect(() => {
-        axios(`https://61e7e744e32cd90017acbe82.mockapi.io/todos/`)
+        axios("https://61e7e744e32cd90017acbe82.mockapi.io/todos")
             .then(response => {
-                console.log(response.data)
                 setAllData(response.data);
                 setFilteredData(response.data);
             })
-    },[])
-
+            .catch(error => {
+                console.log('Error getting fake data: ' + error);
+            })
+    }, []);
     const handleSearch = (event) => {
-        let value = event.target.value.toLowerCase();
+        let value = event.target.value;
         let result = [];
         console.log(value);
-        result = state.filter((data) => {
-            return data.name.search(value) != -1;
+        result = allData.filter((data) => {
+            return data.name.toLowerCase().search(value) != -1;
         });
         setFilteredData(result);
     }
-    return (
-        <div className="App">
-            <div style={{margin: '0 auto', marginTop: '10%'}}>
-                <label>Search:</label>
-                <input type="text" onChange={(event) => handleSearch(event)}/>
+    return(
+        <>
+            <div className="App">
+                <div style={{ margin: '0 auto', marginTop: '10%' }}>
+                    <label>Search:</label>
+                    <input type="text" onChange={(event) =>handleSearch(event)} />
+                </div>
             </div>
-            <div style={{padding: 10}}>
-                {filteredData.map((value, index) => {
-                    return (
+            <div style={{padding:10}}>
+                {filteredData.map((value)=>{
+                    return(
                         <div key={value.id}>
-                            <h1>{value.name}</h1>
-                            <h1>{value.desc}</h1>
+                            <p>
+                                {value.name}
+                            </p>
+                            <p>
+                                {value.desc}
+                            </p>
                         </div>
                     )
                 })}
             </div>
-        </div>
-    );
+        </>
+    )
 }
-
-export default App;
-
