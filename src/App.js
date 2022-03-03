@@ -2,46 +2,64 @@ import React, {useEffect, useState} from 'react';
 import "./App.css"
 import "./index.css"
 import axios from "axios";
+import {tab} from "@testing-library/user-event/dist/tab";
 
 
 const App = () => {
-    const [count , setCount] = useState([])
-    const [data , setData] = useState(count)
-    useEffect(()=> {
+    const [count, setCount] = useState([])
+    const [data, setData] = useState(count)
+    useEffect(() => {
         axios("https://61e7e744e32cd90017acbe82.mockapi.io/shops")
             .then(res => {
-                setData(res.data)
                 setCount(res.data);
+                setData(res.data);
             })
-            .catch(er=>{
-                console.log("ERERERER" , er)
+            .catch(err => {
+                console.log(`error mongoDb ${err}`)
             })
-    })
-    const FilterCount = (event) => {
-        let value = event.target.value.toLowerCase()
+    }, [])
+    const searchCard = (el) => {
+        let value = el.target.value.toLowerCase()
         let result = []
-        result = count.filter((el)=>{
-            return el.name.toLowerCase().search(value) != -1
-            // return el.filter.toLowerCase().search(value) != -1
+        result = count.filter((el) => {
+            return el.name.toLowerCase().search(value) != -1;
         })
+        setData(result)
+    }
+    const filterCard = (el) => {
+        let value = el.target.value.toLowerCase()
+        let result = []
+        result = count.filter((el) => {
+            return el.name.toLowerCase().search(value) != -1;
+        })
+        // console.log(result)
         setData(result)
     }
     return (
         <div className="container">
             <div>
                 <h1>Search</h1>
-                <input type="text" placeholder="Name product" onChange={event => FilterCount(event)}/>
-                {/*<select onChange={event => FilterCount(event)} id="">*/}
-                {/*    {*/}
-                {/*        data.map(el=> <option value={el.filter}>{el.filter}</option>)*/}
-                {/*    }*/}
-                {/*</select>*/}
+                <input type="text" placeholder="search" onChange={(el) => searchCard(el)}/>
+                <select onChange={el => filterCard(el)} id="">
+                    <option value="">
+                        All cards
+                    </option>
+                    {
+                        count.map(el => {
+                            return (
+                                <option value={el.filter}>
+                                    {el.filter}
+                                </option>
+                            )
+                        })
+                    }
+                </select>
             </div>
             <div className="row">
                 {
-                    data.map((el)=>{
-                        return(
-                            <div className="col-3" id={el.id} >
+                    data.map((el) => {
+                        return (
+                            <div className="col-3" id={el.id}>
                                 <div className="box">
                                     <img src={el.img} alt=""/>
                                 </div>
@@ -60,35 +78,6 @@ const App = () => {
 };
 
 export default App;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 // import axios from 'axios';
@@ -111,7 +100,6 @@ export default App;
 //     const handleSearch = (event) => {
 //         let value = event.target.value.toLowerCase();
 //         let result = [];
-//         console.log(result);
 //         result = allData.filter((data) => {
 //             return data.name.toLowerCase().search(value) != -1;
 //         });
