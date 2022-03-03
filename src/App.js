@@ -2,7 +2,6 @@ import React, {useEffect, useState} from 'react';
 import "./App.css"
 import "./index.css"
 import axios from "axios";
-import {tab} from "@testing-library/user-event/dist/tab";
 
 
 const App = () => {
